@@ -14,9 +14,11 @@
       "type": "http",
       "url": "https://stitch.googleapis.com/mcp",
       "headers": {
-        "X-Goog-Api-Key": "${STITCH_API_KEY}"
+        "X-Goog-Api-Key": "TU_API_KEY_AQUI"
       },
       "tools": ["*"]
     }
   }
 }
+
+

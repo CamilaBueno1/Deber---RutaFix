@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Rodaje",
+    "name": "RutaFix",
     "slug": "cuida-lo-que-te-mueve",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -11,6 +11,7 @@
       "icon": "./assets/expo.icon"
     },
     "android": {
+      "package": "com.rutafix.app",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
@@ -37,6 +38,13 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "f4204e7b-616f-422e-ab4c-ed3c2490f63a"
+      }
+    },
+    "owner": "camilabuenor"
   }
 }
