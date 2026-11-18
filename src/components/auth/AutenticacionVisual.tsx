@@ -1,5 +1,4 @@
 import { Image as ExpoImage } from 'expo-image';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { View } from 'react-native';
 import { withUniwind } from 'uniwind';
 import { Texto as Text } from '@/components/ui/Texto';
@@ -20,15 +19,13 @@ export function EncabezadoAutenticacion() {
       </View>
       <View className="items-center">
         <View className="flex-row items-center gap-2.5">
-          <View className="relative h-11 w-11 items-center justify-center">
-            <MaterialCommunityIcons name="map-marker" size={46} color="#192841" />
-            <MaterialCommunityIcons
-              name="car-side"
-              size={17}
-              color="#FFFFFF"
-              style={{ position: 'absolute', top: 10 }}
+          <View className="h-11 w-11 overflow-hidden rounded-xl border border-ruta-blue-line bg-white">
+            <Image
+              source={require('../../../assets/images/app-icon.png')}
+              contentFit="contain"
+              className="h-full w-full"
+              accessibilityLabel="Logo de RutaFix"
             />
-            <View className="absolute bottom-1.5 h-[2px] w-5 rounded-full bg-ruta-amber" />
           </View>
           <Text className="text-[38px] font-extrabold leading-none tracking-tight text-ruta-navy">
             Ruta<Text className="text-ruta-blue">Fix</Text>

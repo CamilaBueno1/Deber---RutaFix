@@ -28,7 +28,9 @@ export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [recordarme, setRecordarme] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loginLoading, setLoginLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
+  const authenticating = loginLoading || googleLoading;
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const handleLogin = async () => {
@@ -38,7 +40,7 @@ export default function LoginScreen() {
     }
 
     try {
-      setLoading(true);
+      setLoginLoading(true);
       setErrorMessage(null);
       await signIn(email, password);
     } catch (err) {
@@ -46,13 +48,13 @@ export default function LoginScreen() {
         err instanceof Error ? err.message : 'Error al iniciar sesión. Verifica tus credenciales.'
       );
     } finally {
-      setLoading(false);
+      setLoginLoading(false);
     }
   };
 
   const handleGoogleLogin = async () => {
     try {
-      setLoading(true);
+      setGoogleLoading(true);
       setErrorMessage(null);
       await iniciarSesionConGoogle();
     } catch (err) {
@@ -60,7 +62,7 @@ export default function LoginScreen() {
         err instanceof Error ? err.message : 'No se pudo iniciar sesión con Google.'
       );
     } finally {
-      setLoading(false);
+      setGoogleLoading(false);
     }
   };
 
@@ -97,7 +99,12 @@ export default function LoginScreen() {
                 </View>
               ) : null}
 
-              <BotonGoogle onPress={handleGoogleLogin} cargando={loading} variante="oficial" />
+              <BotonGoogle
+                onPress={handleGoogleLogin}
+                cargando={googleLoading}
+                deshabilitado={loginLoading}
+                variante="oficial"
+              />
 
               <View className="my-4 flex-row items-center">
                 <View className="h-px flex-1 bg-ruta-blue-line" />
@@ -157,13 +164,13 @@ export default function LoginScreen() {
               <TouchableOpacity
                 accessibilityRole="button"
                 className={`min-h-[56px] flex-row items-center justify-center gap-2.5 rounded-full bg-ruta-navy px-5 shadow-lg shadow-ruta-navy/30 ${
-                  loading ? 'opacity-70' : ''
+                  loginLoading ? 'opacity-70' : ''
                 }`}
                 onPress={() => void handleLogin()}
-                disabled={loading}
+                disabled={authenticating}
                 activeOpacity={0.85}
               >
-                {loading ? (
+                {loginLoading ? (
                   <ActivityIndicator color="#FFFFFF" />
                 ) : (
                   <>

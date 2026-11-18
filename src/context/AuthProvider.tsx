@@ -1,4 +1,12 @@
-import React, { createContext, useContext, useEffect, useState, useMemo } from 'react';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import type { Session, User } from '@supabase/supabase-js';
 import { makeRedirectUri } from 'expo-auth-session';
 import { supabase } from '@/lib/supabase';
@@ -10,6 +18,8 @@ interface ContextoAutenticacionTipo {
   sesion: Session | null;
   usuario: User | null;
   estaCargando: boolean;
+  mostrarBienvenida: boolean;
+  cerrarBienvenida: () => void;
   iniciarSesion: (correo: string, contrasena: string) => Promise<void>;
   registrarse: (
     correo: string,
@@ -36,12 +46,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [sesion, setSesion] = useState<Session | null>(null);
   const [usuario, setUsuario] = useState<User | null>(null);
   const [estaCargando, setEstaCargando] = useState(true);
+  const [mostrarBienvenida, setMostrarBienvenida] = useState(false);
+  const tieneSesionActiva = useRef(false);
 
   useEffect(() => {
     let active = true;
 
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (!active) return;
+      tieneSesionActiva.current = Boolean(session);
       setSesion(session);
       setUsuario(session?.user ?? null);
       setEstaCargando(false);
@@ -51,8 +64,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setEstaCargando(false);
     });
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_evento, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((evento, session) => {
       if (!active) return;
+      if (evento === 'SIGNED_IN' && session && !tieneSesionActiva.current) {
+        setMostrarBienvenida(true);
+      }
+      tieneSesionActiva.current = Boolean(session);
       setSesion(session);
       setUsuario(session?.user ?? null);
       setEstaCargando(false);
@@ -62,6 +79,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       active = false;
       subscription.unsubscribe();
     };
+  }, []);
+
+  const cerrarBienvenida = useCallback(() => {
+    setMostrarBienvenida(false);
   }, []);
 
   const iniciarSesion = async (correo: string, contrasena: string) => {
@@ -101,6 +122,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       sesion,
       usuario,
       estaCargando,
+      mostrarBienvenida,
+      cerrarBienvenida,
       iniciarSesion,
       registrarse,
       cerrarSesion,
@@ -111,7 +134,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       signUp: registrarse,
       signOut: cerrarSesion,
     }),
-    [sesion, usuario, estaCargando]
+    [sesion, usuario, estaCargando, mostrarBienvenida, cerrarBienvenida]
   );
 
   return <ContextoAutenticacion.Provider value={valor}>{children}</ContextoAutenticacion.Provider>;

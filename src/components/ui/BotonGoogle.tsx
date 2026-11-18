@@ -5,12 +5,14 @@ import { Texto as Text } from '@/components/ui/Texto';
 interface PropiedadesBotonGoogle {
   onPress: () => void;
   cargando?: boolean;
+  deshabilitado?: boolean;
   variante?: 'base' | 'oficial';
 }
 
 export function BotonGoogle({
   onPress,
   cargando = false,
+  deshabilitado = false,
   variante = 'base',
 }: PropiedadesBotonGoogle) {
   const estiloOficial = variante === 'oficial';
@@ -23,7 +25,7 @@ export function BotonGoogle({
           : 'rounded-xl border-ruta-line'
       }`}
       onPress={onPress}
-      disabled={cargando}
+      disabled={cargando || deshabilitado}
       accessibilityRole="button"
       accessibilityLabel="Continuar con Google"
       activeOpacity={0.8}

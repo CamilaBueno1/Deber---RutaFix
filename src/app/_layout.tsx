@@ -3,6 +3,7 @@ import '@/global.css';
 import React, { useEffect } from 'react';
 import { Stack, useRouter, useSegments } from 'expo-router';
 import { AuthProvider, useAuth } from '@/context/AuthProvider';
+import { BienvenidaAutenticacion } from '@/components/auth/BienvenidaAutenticacion';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ActivityIndicator, Text, View } from 'react-native';
@@ -83,6 +84,7 @@ export default function RootLayout() {
       <AuthProvider>
         <StatusBar style="dark" />
         <RouteGuard />
+        <BienvenidaAutenticacion />
       </AuthProvider>
     </SafeAreaProvider>
   );
